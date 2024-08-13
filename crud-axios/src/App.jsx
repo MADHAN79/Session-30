@@ -15,14 +15,17 @@ const App = () => {
   }, []);
 
   const handleUserAdded = (newUser) => {
-    setUsers([...users, newUser]);
+    // Assign a unique ID that won't conflict with existing API users
+    const nextId = users.length ? Math.max(...users.map(user => user.id)) + 1 : 1;
+    const userWithId = { ...newUser, id: nextId };
+    setUsers([...users, userWithId]);
   };
 
   const handleUserUpdated = (updatedUser) => {
     setUsers(users.map((user) => 
       user.id === updatedUser.id ? updatedUser : user
     ));
-    setEditingUser(null); // Clear the editing form after update
+    setEditingUser(null);
   };
 
   const handleUserDeleted = (id) => {

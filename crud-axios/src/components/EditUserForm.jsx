@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../api/api';
 
 const EditUserForm = ({ user, onUserUpdated }) => {
@@ -12,11 +12,19 @@ const EditUserForm = ({ user, onUserUpdated }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    api.put(`/${user.id}`, { name, email })
-      .then((response) => {
-        onUserUpdated(response.data);
-      })
-      .catch((error) => console.error(error));
+    
+    // Check if the user is from the API or newly added
+    if (user.id <= 10) {
+      // Existing API user
+      api.put(`/${user.id}`, { name, email })
+        .then((response) => {
+          onUserUpdated(response.data);
+        })
+        .catch((error) => console.error(error));
+    } else {
+      // Newly added user, update locally
+      onUserUpdated({ ...user, name, email });
+    }
   };
 
   return (
